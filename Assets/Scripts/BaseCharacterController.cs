@@ -36,11 +36,23 @@ public class BaseCharacterController : MonoBehaviour
         transform.Translate(new Vector3(movementInput.x, movementInput.y, 0) * Time.deltaTime * actualMovementSpeed);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("FightEncounter"))
+        {
+            //CheckForEncouter();
+        }
+    }
+
     private void OnTriggerStay2D(Collider2D col)
     {
         if (col.gameObject.CompareTag("Swamp"))
         {
             isSlowed = true;
+        }
+        else
+        {
+            Debug.LogError("Unknown trigger: " + col.gameObject.name);
         }
     }
     private void OnTriggerExit2D(Collider2D col)

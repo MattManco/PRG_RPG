@@ -40,7 +40,7 @@ public class BaseCharacterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("FightEncounter"))
         {
-            //CheckForEncouter();
+            CheckForEncouter();
         }
     }
 
@@ -61,5 +61,10 @@ public class BaseCharacterController : MonoBehaviour
         {
             isSlowed = false;
         }
+    }
+
+    private void CheckForEncouter()
+    {
+        FightManager.Instance.CheckForEncounter();
     }
 }

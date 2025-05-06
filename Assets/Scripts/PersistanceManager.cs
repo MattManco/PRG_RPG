@@ -19,6 +19,4 @@ public class PersistanceManager : MonoBehaviour
             Destroy(gameObject);
         }    
     }
-
-
 }

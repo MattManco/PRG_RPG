@@ -7,6 +7,7 @@ public class FightManager : MonoBehaviour
     [Range(0,100),SerializeField] private int chanceToEncounter;
     [SerializeField] GameObject fightCanvas;
     private bool isFightActive;
+    private BaseCharacterController characterController;
 
 
     // Start is called before the first frame update
@@ -24,8 +25,9 @@ public class FightManager : MonoBehaviour
         isFightActive = false;
     }
 
-    public bool CheckForEncounter()
+    public bool CheckForEncounter(BaseCharacterController characterController)
     {
+        this.characterController = characterController;
         if (Random.Range(0, 100) < chanceToEncounter)
         {
             StartFight();
@@ -35,13 +37,14 @@ public class FightManager : MonoBehaviour
 
     private void StartFight()
     {
-        fightCanvas.SetActive(true);
-        isFightActive = true;
         StartCoroutine(FightCoroutine());
     }
 
     private IEnumerator FightCoroutine()
     {
+        isFightActive = true;
+        fightCanvas.SetActive(isFightActive);
+        
         //Load Characters
         LoadCharacter();
         //Load Random Enemies
@@ -69,9 +72,14 @@ public class FightManager : MonoBehaviour
 
         //End Fight and gain XP and Gold
         //Level UP?
+        fightCanvas.SetActive(isFightActive);
+        characterController.PausePlayer(isFightActive);
     }
     private void LoadCharacter()
     {
-
+        foreach (var character in CharacterStatsManager.Instance.characters)
+        {
+            character.Value.LoadPlayerPrefab(character.Key);
+        }
     }
 }

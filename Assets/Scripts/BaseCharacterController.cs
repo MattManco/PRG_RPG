@@ -64,7 +64,7 @@ public class BaseCharacterController : MonoBehaviour
             if(currentPosition != lastEncounterPosition)
             {
                 lastEncounterPosition = currentPosition;
-                isPlayerPaused = FightManager.Instance.CheckForEncounter();
+                PausePlayer(FightManager.Instance.CheckForEncounter(this));
             }
         }
     }
@@ -76,8 +76,8 @@ public class BaseCharacterController : MonoBehaviour
         }
     }
 
-    private void CheckForEncouter()
+    public void PausePlayer(bool isPaused)
     {
-        FightManager.Instance.CheckForEncounter();
+        isPlayerPaused = isPaused;
     }
 }

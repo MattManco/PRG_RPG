@@ -5,9 +5,9 @@ using UnityEngine;
 public class CharacterStatsManager : MonoBehaviour
 {
     public static CharacterStatsManager Instance { get; private set; }
-    private Dictionary<string, BattleCharacter> characters;
-    private Dictionary<string, bool> equipment;
-    private Dictionary<string, int> items;
+    public Dictionary<string, BattleCharacter> characters { get; private set; }
+    public Dictionary<string, bool> equipment { get; private set; }
+    public Dictionary<string, int> items { get; private set; }
 
 
     void Start()
@@ -26,9 +26,11 @@ public class CharacterStatsManager : MonoBehaviour
 
     private void Load()
     {
-        characters = new Dictionary<string, BattleCharacter>();      
-        characters.Add("Warrior", new Warrior());
-        characters.Add("Mage", new Mage());
+        characters = new Dictionary<string, BattleCharacter>
+        {
+            { "Warrior", new Warrior() },
+            { "Mage", new Mage() },
+        };      
 
         equipment = new Dictionary<string, bool>();
         items = new Dictionary<string, int>();

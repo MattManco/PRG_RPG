@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Warrior : BattleCharacter
 {
-    public override void LoadPlayerPrefab() { }
     public override void Attack(BattleCharacter target) { }
     public override void Defend(BattleCharacter target) { }
     public override void UseAbility(BattleCharacter target, string abilityName) { }

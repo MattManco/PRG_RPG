@@ -72,6 +72,8 @@ public class FightManager : MonoBehaviour
 
         //End Fight and gain XP and Gold
         //Level UP?
+        //Safe in StatsManager
+        //Delete all Battle Assets
         fightCanvas.SetActive(isFightActive);
         characterController.PausePlayer(isFightActive);
     }

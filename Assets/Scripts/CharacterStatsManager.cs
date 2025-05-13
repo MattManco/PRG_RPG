@@ -28,9 +28,9 @@ public class CharacterStatsManager : MonoBehaviour
     {
         characters = new Dictionary<string, BattleCharacter>
         {
-            { "Xena", new Warrior() },
-            { "Mighty Mole", new Mage() },
-            { "Peter Pan", new Archer() }
+            { "Xena", null },
+            { "Mighty Mole", null },
+            { "Peter Pan", null }
         };      
 
         equipment = new Dictionary<string, bool>();

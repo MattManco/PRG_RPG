@@ -15,6 +15,9 @@ public class BaseCharacterController : MonoBehaviour
     private Vector3Int currentPosition;
     private Vector3Int lastEncounterPosition;
 
+    /// <summary>
+    /// returns the first found Tilemap in the scene (!!make sure all Tilemaps have the same Transform!!)
+    /// </summary>
     public Tilemap tilemap
     {
         get
@@ -27,6 +30,7 @@ public class BaseCharacterController : MonoBehaviour
 
     private void Start()
     {
+        //Setting first values
         isSlowed = false;
         isPlayerPaused = false;
     }
@@ -41,16 +45,18 @@ public class BaseCharacterController : MonoBehaviour
         movementInput = ctx.ReadValue<Vector2>(); //comment
     }
 
-    //This is now a FIXEDupdate
+
     private void FixedUpdate()
     {
+        //If isPlayerPaused is true, the player cannot move, FixedUpdate is "returning" void in the next line
         if (isPlayerPaused) return;
-        //var actuallMovementSpeed = isSlowed ? movementSpeed * slowedFactor : movementSpeed;
-        var actualMovementSpeed = movementSpeed;
-        if(isSlowed) actualMovementSpeed *= slowedFactor;
 
-        transform.Translate(new Vector3(movementInput.x, movementInput.y, 0) * Time.deltaTime * actualMovementSpeed);
-        currentPosition = tilemap.WorldToCell(transform.position);
+        //Default movement Speed
+        var actualMovementSpeed = movementSpeed;
+        if(isSlowed) actualMovementSpeed *= slowedFactor; //Multiply by slowedFactor if the player is in a swamp
+
+        transform.Translate(new Vector3(movementInput.x, movementInput.y, 0) * Time.deltaTime * actualMovementSpeed); // transform + input * deltaTime;
+        currentPosition = tilemap.WorldToCell(transform.position); //translates World position to tilemap-cell position
     }
 
     private void OnTriggerStay2D(Collider2D col)
@@ -64,7 +70,8 @@ public class BaseCharacterController : MonoBehaviour
             if(currentPosition != lastEncounterPosition)
             {
                 lastEncounterPosition = currentPosition;
-                PausePlayer(FightManager.Instance.CheckForEncounter(this));
+                // FightManager is a singleton that checks if the player is in an encounter, returning true or false for pausing player
+                PausePlayer(FightManager.Instance.CheckForEncounter(this)); 
             }
         }
     }

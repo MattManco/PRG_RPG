@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class BattleCharacter: MonoBehaviour
 {
-    //public string PlayerName;
+    [HideInInspector] public string PlayerName;
     //public int ExperiencePoints { get; private set; }
     //public int Level { get; private set; }
     //public int Health { get; private set; }
     //public int MaxHealth { get; private set; }
     //public int attack { get; private set; }
     //public int defense { get; private set; }
-    //public bool isCharacterDeath { get; private set; }
+    public bool isCharacterDeath { get; private set; }
 
 
     //[Header("VISUALS")]

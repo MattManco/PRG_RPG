@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Lv1_Rock
+  m_EditorClassIdentifier: Assembly-CSharp::BattleEntityData
+  spawnablePrefab: {fileID: 1831887759984477337, guid: 3bb89a81ce8303d4a9ac8b8acbc99e3b,
+    type: 3}
+  type: 2
+  entityName: Young Rock
+  level: 1
+  health: 10
+  maxHealth: 10
+  attack: 1
+  defense: 1
+  abilities:
+  - {fileID: 11400000, guid: 4045f37e30f53214d85314d7682c80a3, type: 2}
+  - {fileID: 11400000, guid: 044d2d4cbf1e2cb499b21145f9e82d78, type: 2}
+  - {fileID: 11400000, guid: d0b94684643ada448b23a827d0d2ca5c, type: 2}

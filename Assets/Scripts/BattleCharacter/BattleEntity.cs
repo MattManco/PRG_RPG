@@ -10,6 +10,8 @@ public class BattleEntityData : ScriptableObject
 {
     public GameObject spawnablePrefab;
 
+    public BattleEntityType type;
+
     // The name of the entity (e.g., character or enemy).
     public string entityName;
 
@@ -28,9 +30,23 @@ public class BattleEntityData : ScriptableObject
     // The defense value of the entity, which reduces incoming damage.
     public int defense;
 
-    // Indicates whether the entity is dead.
-    public bool isDead;
-
     // A list of abilities the entity can use in battle.
-    public List<string> abilities;
+    public List<AbilityData> abilities;
+}
+
+public struct BattleEntity
+{
+    BattleEntityType type;
+
+    // Constructor to initialize the BattleEntity with its data and instance.
+    public BattleEntity(BattleEntityType type)
+    {
+        this.type = type;
+    }
+}
+public enum BattleEntityType
+{
+    None,
+    Player,
+    Enemy,
 }

@@ -2,6 +2,7 @@
 // fight logic, and cleanup after the fight ends.
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FightManager : MonoBehaviour
@@ -21,6 +22,11 @@ public class FightManager : MonoBehaviour
     // Reference to the player's character controller.
     private BaseCharacterController characterController;
 
+    [SerializeField] private List<BattleEntityData> battleEnemies;
+
+    private List<BattleCharacter> spawnedEnemies;
+    private List<BattleCharacter> spawnedCharacters;
+
     // Called when the script is initialized. Ensures the Singleton pattern is enforced.
     void Start()
     {
@@ -37,6 +43,8 @@ public class FightManager : MonoBehaviour
 
         // Initialize the fight state as inactive.
         isFightActive = false;
+        spawnedCharacters = new List<BattleCharacter>();
+        spawnedEnemies = new List<BattleCharacter>();
     }
 
     // Checks if a fight should start based on the encounter chance.
@@ -66,10 +74,10 @@ public class FightManager : MonoBehaviour
         fightCanvas.SetActive(isFightActive);
 
         // Load the player's characters into the fight.
-        // LoadCharacter();
+        LoadCharacter();
 
-        // Placeholder for loading additional fight assets like enemies, music, etc.
         // Load Random Enemies
+        SpawnRandomEnemy();
         // Load BackgroundImages
         // Load Music
         // Load UI
@@ -93,8 +101,9 @@ public class FightManager : MonoBehaviour
             // Wait for 3 seconds before the next iteration (placeholder logic).
             yield return new WaitForSeconds(3f);
 
-            // End the fight (placeholder logic for demonstration purposes).
-            isFightActive = false; // Fight ends here for now.
+            // End the fight
+            var battleOverType = CheckForEndFight();
+            isFightActive = battleOverType == BattleEntityType.None; // Fight ends here for now.
         }
 
         // After the fight ends:
@@ -102,6 +111,7 @@ public class FightManager : MonoBehaviour
         // - Check for level-ups.
         // - Save progress in the StatsManager.
         // - Clean up all battle-related assets.
+        UnloadFightUI();
 
         // Disable the fight UI canvas.
         fightCanvas.SetActive(isFightActive);
@@ -111,15 +121,47 @@ public class FightManager : MonoBehaviour
     }
 
     // Loads the player's characters into the fight.
-    //private void LoadCharacter()
-    //{
-    //    // Iterate through all characters in the CharacterStatsManager.
-    //    foreach (var character in CharacterStatsManager.Instance.characters)
-    //    {
-    //        // Load the character's prefab into the fight scene.
-    //        character.Value.LoadPlayerPrefab(character.Key);
+    private void LoadCharacter()
+    {
+        // Iterate through all characters in the CharacterStatsManager.
+        foreach (var character in CharacterStatsManager.Instance.characterData)
+        {
+            // Load the character's prefab into the fight scene.
+            spawnedCharacters.Add(SpawnManager.instance.SpawnBattleEntity(character));
+        }
+    }
 
-    //        SpawnManager.instance.SpawnBattleCharacter( character.Value, character.Key);
-    //    }
-    //}
+    private void SpawnRandomEnemy()
+    {
+        var count = Random.Range(1, 7);
+
+        for (int i = 0; i < count; i++)
+        {
+            var randomEnemy = battleEnemies[Random.Range(0, battleEnemies.Count)];
+            spawnedEnemies.Add(SpawnManager.instance.SpawnBattleEntity(randomEnemy));
+        }
+    }
+
+    private BattleEntityType CheckForEndFight()
+    {
+        // Check if all enemies are dead using a lambda expression.
+        bool allEnemiesDead = spawnedEnemies.TrueForAll(enemy => enemy.isCharacterDeath);
+
+        // Check if all players are dead using a lambda expression.
+        bool allPlayersDead = spawnedCharacters.TrueForAll(character => character.isCharacterDeath);
+
+        // The fight continues as long as not all players or all enemies are dead.
+        if(allEnemiesDead)
+            return BattleEntityType.Enemy;
+        if(allPlayersDead)
+            return BattleEntityType.Player;
+        return BattleEntityType.None;
+    }
+
+    private void UnloadFightUI()
+    {
+        spawnedCharacters.Clear();
+        spawnedEnemies.Clear();
+        SpawnManager.instance.Unload();
+    }
 }

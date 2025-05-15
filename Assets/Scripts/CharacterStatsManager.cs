@@ -5,7 +5,8 @@ using UnityEngine;
 public class CharacterStatsManager : MonoBehaviour
 {
     public static CharacterStatsManager Instance { get; private set; }
-    public Dictionary<string, BattleCharacter> characters { get; private set; }
+    public List<BattleEntityData> characterData;
+    public Dictionary<string, int> characterExp;
     public Dictionary<string, bool> equipment { get; private set; }
     public Dictionary<string, int> items { get; private set; }
 
@@ -26,12 +27,12 @@ public class CharacterStatsManager : MonoBehaviour
 
     private void Load()
     {
-        characters = new Dictionary<string, BattleCharacter>
+        characterExp = new Dictionary<string, int>();
+
+        foreach (var item in characterData)
         {
-            { "Xena", null },
-            { "Mighty Mole", null },
-            { "Peter Pan", null }
-        };      
+            characterExp.Add(item.name, 0);
+        }
 
         equipment = new Dictionary<string, bool>();
         items = new Dictionary<string, int>();

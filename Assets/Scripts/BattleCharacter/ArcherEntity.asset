@@ -16,10 +16,8 @@ MonoBehaviour:
     type: 3}
   type: 1
   entityName: "G\xFCnther"
-  level: 1
-  health: 100
-  maxHealth: 100
-  attack: 1
-  defense: 1
+  baseMaxHealth: 98
+  baseAttack: 0
+  baseDefense: 0
   abilities:
   - {fileID: 11400000, guid: 6f2f24945af2fca46b587f8f80295743, type: 2}

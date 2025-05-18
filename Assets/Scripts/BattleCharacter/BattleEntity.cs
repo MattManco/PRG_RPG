@@ -15,20 +15,14 @@ public class BattleEntityData : ScriptableObject
     // The name of the entity (e.g., character or enemy).
     public string entityName;
 
-    // The level of the entity.
-    public int level;
-
-    // The current health of the entity.
-    public int health;
-
     // The maximum health of the entity.
-    public int maxHealth;
+    public int baseMaxHealth;
 
     // The attack power of the entity.
-    public int attack;
+    public int baseAttack;
 
     // The defense value of the entity, which reduces incoming damage.
-    public int defense;
+    public int baseDefense;
 
     // A list of abilities the entity can use in battle.
     public List<AbilityData> abilities;

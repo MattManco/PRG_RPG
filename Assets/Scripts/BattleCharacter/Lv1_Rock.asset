@@ -16,11 +16,9 @@ MonoBehaviour:
     type: 3}
   type: 2
   entityName: Young Rock
-  level: 1
-  health: 10
-  maxHealth: 10
-  attack: 1
-  defense: 1
+  baseMaxHealth: 112
+  baseAttack: 0
+  baseDefense: 0
   abilities:
   - {fileID: 11400000, guid: 4045f37e30f53214d85314d7682c80a3, type: 2}
   - {fileID: 11400000, guid: 044d2d4cbf1e2cb499b21145f9e82d78, type: 2}

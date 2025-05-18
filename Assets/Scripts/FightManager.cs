@@ -4,6 +4,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class FightManager : MonoBehaviour
 {
@@ -15,14 +17,14 @@ public class FightManager : MonoBehaviour
 
     // Reference to the fight UI canvas that will be displayed during a fight.
     [SerializeField] GameObject fightCanvas;
+    [SerializeField] Image fightBackgroundSprite;
+    [SerializeField] AudioSource fightMusic;
 
     // Tracks whether a fight is currently active.
     private bool isFightActive;
 
     // Reference to the player's character controller.
     private BaseCharacterController characterController;
-
-    [SerializeField] private List<BattleEntityData> battleEnemies;
 
     private List<BattleCharacter> spawnedEnemies;
     private List<BattleCharacter> spawnedCharacters;
@@ -79,7 +81,10 @@ public class FightManager : MonoBehaviour
         // Load Random Enemies
         SpawnRandomEnemy();
         // Load BackgroundImages
+        LoadBackground();
+
         // Load Music
+        LoadBattleMusic();
         // Load UI
         // Load Items
 
@@ -123,7 +128,6 @@ public class FightManager : MonoBehaviour
     // Loads the player's characters into the fight.
     private void LoadCharacter()
     {
-        // Iterate through all characters in the CharacterStatsManager.
         foreach (var character in CharacterStatsManager.Instance.characterData)
         {
             // Load the character's prefab into the fight scene.
@@ -133,13 +137,15 @@ public class FightManager : MonoBehaviour
 
     private void SpawnRandomEnemy()
     {
-        var count = Random.Range(1, 7);
+        List<int> enemyLevels = new List<int>();
+        List<Health> enemyHealth = new List<Health>();
+        var enemies = FindObjectOfType<SceneFightDataHolder>().GetBattleEnemies(out enemyLevels, out enemyHealth);
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            var randomEnemy = battleEnemies[Random.Range(0, battleEnemies.Count)];
-            spawnedEnemies.Add(SpawnManager.instance.SpawnBattleEntity(randomEnemy));
+            spawnedEnemies.Add(SpawnManager.instance.SpawnBattleEntity(enemies[i], enemyLevels[i], enemyHealth[i]));
         }
+
     }
 
     private BattleEntityType CheckForEndFight()
@@ -163,5 +169,25 @@ public class FightManager : MonoBehaviour
         spawnedCharacters.Clear();
         spawnedEnemies.Clear();
         SpawnManager.instance.Unload();
+    }
+
+    private void LoadBackground()
+    {
+        // Get a random background sprite from the FightBackgroundDataHolder.
+        var backgroundSprite = FindObjectOfType<SceneFightDataHolder>().GetFightBackgroundSprite();
+
+        // Set the background image in the fight canvas.
+        if (backgroundSprite == null) fightBackgroundSprite.color = new Color(0, 0, 0, 0);
+        else 
+        { 
+            fightBackgroundSprite.color = new Color(.7f, .7f, .7f, 1); //<-- Set the color to gray
+            fightBackgroundSprite.sprite = backgroundSprite;
+        }
+    }
+
+    private void LoadBattleMusic()
+    {
+        fightMusic.clip = FindObjectOfType<SceneFightDataHolder>().GetBattleMusic();
+        fightMusic.Play();
     }
 }

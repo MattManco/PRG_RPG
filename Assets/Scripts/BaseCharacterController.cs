@@ -14,6 +14,7 @@ public class BaseCharacterController : MonoBehaviour
     private bool isPlayerPaused;
     private Vector3Int currentPosition;
     private Vector3Int lastEncounterPosition;
+    private CharacterAnimationManager cam;
 
     /// <summary>
     /// returns the first found Tilemap in the scene (!!make sure all Tilemaps have the same Transform!!)
@@ -33,6 +34,7 @@ public class BaseCharacterController : MonoBehaviour
         //Setting first values
         isSlowed = false;
         isPlayerPaused = false;
+        cam = GetComponent<CharacterAnimationManager>();
     }
 
     /// <summary>
@@ -43,6 +45,10 @@ public class BaseCharacterController : MonoBehaviour
     {
         //movementInput is set by unity events
         movementInput = ctx.ReadValue<Vector2>(); //comment
+        if(!isPlayerPaused)
+            cam.SetAnimatorValues(movementInput.x, movementInput.y); //Set animator values to the input values
+        else
+            cam.SetAnimatorValues(0, 0); //Set animator values to 0 if the player is paused
     }
 
 

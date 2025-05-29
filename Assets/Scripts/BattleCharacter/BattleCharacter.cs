@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleCharacter: MonoBehaviour
 {
     [HideInInspector] public string PlayerName;
     public int ExperiencePoints { get; private set; }
-    [SerializeField] public int Level { get; private set; }
+    public int Level { get; private set; }
+    [Header("Functionality")]
+    public Button selectionButton;
+    
     public Health health { get; private set; }
-    //public int attack { get; private set; }
-    //public int defense { get; private set; }
+    public int attack;
+    public int defense;
+    public int fleeChance;
+
     public bool isCharacterDeath { get; private set; }
 
     public virtual void SetExp(int experience)
@@ -52,7 +58,10 @@ public class BattleCharacter: MonoBehaviour
     [SerializeField] private TMP_Text hpText;
     [SerializeField] private TMP_Text maxHpText;
 
+    private List<AbilityData> possibleAbillities;
+    private AbilityData currentSelectedAbillity;
 
+    #region Set-Up
     public virtual void SetHP()
     {
         SetHP(health);
@@ -69,26 +78,46 @@ public class BattleCharacter: MonoBehaviour
         maxHpText.text = health.maxHealth.ToString();
         hpText.text = health.health.ToString();
     }
+    #endregion
 
 
-    //public virtual void Attack(BattleEnemy target) { }
-    //public virtual void Defend(BattleEnemy target) { }
-    //public virtual void UseAbility(BattleEnemy target, string abilityName) { }
-    //public virtual void UseItem(string itemName) { }
-    //public virtual void Heal(int healAmount) { }
-    //public virtual bool LevelUp() {
-    //    if(ExperiencePoints > 100 * Level)
-    //    {
-    //        ExperiencePoints -= 100 * Level; 
-    //        Level++;
-    //        return true;
-    //    }
-    //    return false;
-    //}
+    #region FightLogic
 
-    //public virtual void AddExperiencePoints(int exp)
-    //{
-    //    ExperiencePoints += exp;
-    //    LevelUp();
-    //}
+
+    public void OnAttackButtonClicked()
+    {
+        AbilityData attack = new AbilityData()
+        {
+            abilityName = "Basic Attack",
+            target = AbilityTargetType.SingleTarget,
+            type = AbilityType.action,
+            stat = AbilityStatType.attack,
+            abilityTime = 0,
+        };
+        currentSelectedAbillity = attack;
+    }    
+    
+    public void OnSkillButtonClicked()
+    {
+        FightManager.Instance.SpawnSkillButtons(possibleAbillities);
+    }    
+    
+    public void OnItemButtonClicked()
+    {
+        FightManager.Instance.SpawnUsableItems();
+    }    
+    
+    public void OnFleeButtonClicked()
+    {
+        AbilityData fleeAbility = new AbilityData()
+        {
+            abilityName = "Flee",
+            target = AbilityTargetType.SingleTarget,
+            type = AbilityType.action,
+            stat = AbilityStatType.flee,
+            abilityTime = 0,
+        };
+        currentSelectedAbillity = fleeAbility;
+    }
+    #endregion
 }

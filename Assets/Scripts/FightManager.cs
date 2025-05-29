@@ -20,6 +20,16 @@ public class FightManager : MonoBehaviour
     [SerializeField] Image fightBackgroundSprite;
     [SerializeField] AudioSource fightMusic;
 
+    [Header("PlayerUIButtons")]
+    [SerializeField] Button attackButton;
+    [SerializeField] Button skillButton;
+    [SerializeField] Button itemButton;
+    [SerializeField] Button fleeButton;
+
+    [Header("UIContainer")]
+    [SerializeField] Transform playerContextUI;
+
+
     // Tracks whether a fight is currently active.
     private bool isFightActive;
 
@@ -71,6 +81,7 @@ public class FightManager : MonoBehaviour
     {
         // Set the fight state to active.
         isFightActive = true;
+        var battleState = BattleState.PlayerTransition;
 
         // Enable the fight UI canvas.
         fightCanvas.SetActive(isFightActive);
@@ -85,26 +96,51 @@ public class FightManager : MonoBehaviour
 
         // Load Music
         LoadBattleMusic();
-        // Load UI
-        // Load Items
 
-        /* Example of a transition phase:
-         * while(transition){
-         *     DoStuff();
-         *     yield return new WaitForEndOfFrame();
-         * }
-         */
+        // Load UI
+        EnableBattleButtons(false);
+
 
         // Main fight loop. Runs as long as the fight is active.
         while (isFightActive)
         {
+            switch (battleState)
+            {
+                case BattleState.PlayerTurn:
+
+                    BattleCharacter nextPlayerCharacter = spawnedCharacters[0];
+
+                    while (battleState == BattleState.PlayerTurn)
+                    {
+                        yield return new WaitForEndOfFrame();
+
+                        //if(playerActions.Count >= spawnedCharacters.Count)
+                        //{
+                        //    battleState = BattleState.EnemyTransition;
+                        //}
+                    }
+                    break;
+                case BattleState.EnemyTurn:
+                    break;
+                case BattleState.PlayerTransition:
+                    EnableBattleButtons(true);
+                    battleState = BattleState.PlayerTurn;
+                    break;
+                case BattleState.EnemyTransition:
+                    EnableBattleButtons(false);
+                    battleState = BattleState.EnemyTurn;
+                    break;
+                default:
+                    break;
+            }
+
             // Placeholder for fight logic:
             // - Determine whose turn it is.
             // - Execute player/enemy actions.
             // - Check for fight end conditions (e.g., player or enemy defeat).
 
             // Wait for 3 seconds before the next iteration (placeholder logic).
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForEndOfFrame();
 
             // End the fight
             var battleOverType = CheckForEndFight();
@@ -190,4 +226,56 @@ public class FightManager : MonoBehaviour
         fightMusic.clip = FindObjectOfType<SceneFightDataHolder>().GetBattleMusic();
         fightMusic.Play();
     }
+
+
+    private void EnableBattleButtons(bool active, BattleCharacter currentCharacter = null)
+    {
+        // Enable or disable the buttons based on the 'active' parameter.
+        attackButton.interactable = active;
+        skillButton.interactable = active;
+        itemButton.interactable = active;
+        fleeButton.interactable = active;
+
+        // If buttons are being enabled, subscribe them to character-specific actions.
+        if (active && currentCharacter != null)
+        {
+
+            attackButton.onClick.AddListener(() => currentCharacter.OnAttackButtonClicked());
+
+                // Subscribe the skill button to the character's skill action.
+            skillButton.onClick.AddListener(() => currentCharacter.OnSkillButtonClicked());
+
+                // Subscribe the item button to the character's item usage action.
+            itemButton.onClick.AddListener(() => currentCharacter.OnItemButtonClicked());
+
+            // Subscribe the flee button to a general flee action.
+            fleeButton.onClick.AddListener(() => currentCharacter.OnFleeButtonClicked());
+        }
+        else
+        {
+            // Unsubscribe all listeners from the buttons to avoid duplicate subscriptions.
+            attackButton.onClick.RemoveAllListeners();
+            skillButton.onClick.RemoveAllListeners();
+            itemButton.onClick.RemoveAllListeners();
+            fleeButton.onClick.RemoveAllListeners();
+        }
+    }
+
+    public void SpawnSkillButtons(List<AbilityData> abilities)
+    {
+        ///ToDo!
+    }
+
+    public void SpawnUsableItems()
+    {
+        ///ToDo!
+    }
+}
+
+public enum BattleState 
+{
+    PlayerTurn,
+    EnemyTurn,
+    PlayerTransition,
+    EnemyTransition,
 }

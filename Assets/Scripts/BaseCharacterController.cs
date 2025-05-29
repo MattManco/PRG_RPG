@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Tilemaps;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -15,6 +14,7 @@ public class BaseCharacterController : MonoBehaviour
     private Vector3Int currentPosition;
     private Vector3Int lastEncounterPosition;
     private CharacterAnimationManager cam;
+    private PlayerInput playerInput;
 
     /// <summary>
     /// returns the first found Tilemap in the scene (!!make sure all Tilemaps have the same Transform!!)
@@ -31,10 +31,12 @@ public class BaseCharacterController : MonoBehaviour
 
     private void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         //Setting first values
         isSlowed = false;
         isPlayerPaused = false;
         cam = GetComponent<CharacterAnimationManager>();
+        PausePlayer(false);
     }
 
     /// <summary>
@@ -45,15 +47,14 @@ public class BaseCharacterController : MonoBehaviour
     {
         //movementInput is set by unity events
         movementInput = ctx.ReadValue<Vector2>(); //comment
-        if(!isPlayerPaused)
-            cam.SetAnimatorValues(movementInput.x, movementInput.y); //Set animator values to the input values
-        else
-            cam.SetAnimatorValues(0, 0); //Set animator values to 0 if the player is paused
     }
 
 
     private void FixedUpdate()
     {
+        SetAnimStates();
+
+
         //If isPlayerPaused is true, the player cannot move, FixedUpdate is "returning" void in the next line
         if (isPlayerPaused) return;
 
@@ -89,8 +90,30 @@ public class BaseCharacterController : MonoBehaviour
         }
     }
 
+    private void SetAnimStates()
+    {
+        cam.SetAnimatorValues(movementInput.x, movementInput.y); //Set animator values to the input values
+    }
+
     public void PausePlayer(bool isPaused)
     {
         isPlayerPaused = isPaused;
+
+        // Get the specific InputAction for movement.
+        var movementAction = playerInput.actions["Movement"];
+
+        if (isPaused)
+        {
+            // Unsubscribe from the movement input.
+            movementAction.performed -= Movement;
+            movementAction.canceled -= Movement;
+            movementInput = Vector2.zero; // Reset movement input when unpausing
+        }
+        else
+        {
+            // Subscribe to the movement input.
+            movementAction.performed += Movement;
+            movementAction.canceled += Movement;           
+        }
     }
 }

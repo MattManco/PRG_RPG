@@ -10,7 +10,7 @@ public class CharacterStatsManager : MonoBehaviour
     private Dictionary<string, int> characterExp;
     private Dictionary<string, Health> characterHP;
     public Dictionary<string, bool> equipment { get; private set; }
-    public Dictionary<string, int> items { get; private set; }
+    public Dictionary<BaseItem, int> items { get; private set; }
 
 
     void Start()
@@ -39,7 +39,7 @@ public class CharacterStatsManager : MonoBehaviour
         }
 
         equipment = new Dictionary<string, bool>();
-        items = new Dictionary<string, int>();
+        items = new Dictionary<BaseItem, int>();
     }
 
     public int GetPlayerExp(string playerName)

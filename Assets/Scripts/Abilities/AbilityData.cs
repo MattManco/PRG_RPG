@@ -22,6 +22,7 @@ public enum  AbilityType
 {
     incremental,
     decremental,
+    action,
 }
 
 
@@ -31,4 +32,5 @@ public enum AbilityStatType
     attack,
     defense,
     revival,
+    flee,
 }

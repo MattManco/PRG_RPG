@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseItem : MonoBehaviour
+// Create a menu option in Unity to create new BattleEntityData assets.
+[CreateAssetMenu(fileName = "BaseItem", menuName = "Items/BaseItems")]
+public class BaseItem : ScriptableObject
 {
     [SerializeField] private string itemName;
     [SerializeField] private string itemDescription;

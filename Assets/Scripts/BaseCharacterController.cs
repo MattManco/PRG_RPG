@@ -14,7 +14,7 @@ public class BaseCharacterController : MonoBehaviour
     private Vector3Int currentPosition;
     private Vector3Int lastEncounterPosition;
     private CharacterAnimationManager cam;
-    private PlayerInput playerInput;
+    public PlayerInput playerInput { get; private set; }
 
     /// <summary>
     /// returns the first found Tilemap in the scene (!!make sure all Tilemaps have the same Transform!!)
@@ -46,7 +46,9 @@ public class BaseCharacterController : MonoBehaviour
     public void Movement(CallbackContext ctx)
     {
         //movementInput is set by unity events
-        movementInput = ctx.ReadValue<Vector2>(); //comment
+        var input = ctx.ReadValue<Vector2>();
+        if(Mathf.Abs(input.x) > 0.1f) input = Vector2.right * Mathf.Sign(input.x); //If the input is horizontal, set it to vertical (up or down) to prevent diagonal movement
+        movementInput = input; //comment
     }
 
 

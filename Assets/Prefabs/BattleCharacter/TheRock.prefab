@@ -189,6 +189,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerName: 
   selectionButton: {fileID: 3677974908804224884}
+  attack: 0
+  defense: 0
+  fleeChance: 0
   nameText: {fileID: 7598901902364100199}
   hpText: {fileID: 7441177909604133575}
   maxHpText: {fileID: 3941783698838409982}
